@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
       .upsert({ date, views: 1, shares: 0 }, { onConflict: "date" });
 
     return NextResponse.json(row);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch APOD data" },
       { status: 502 }
