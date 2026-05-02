@@ -1,8 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import { DatePicker } from "@/components/DatePicker";
 import { CoupleForm } from "@/components/CoupleForm";
+import { GroupForm } from "@/components/GroupForm";
 import { SurpriseButton } from "@/components/SurpriseButton";
 import { RecentDates } from "@/components/RecentDates";
+import { FamousDates } from "@/components/FamousDates";
 import { supabase } from "@/lib/supabase";
 import { fetchApodFromNasa } from "@/lib/nasa";
 import Image from "next/image";
@@ -51,6 +53,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "home" });
   const tToday = await getTranslations({ locale, namespace: "today" });
+  const tGroup = await getTranslations({ locale, namespace: "group" });
+  const tFamous = await getTranslations({ locale, namespace: "famous" });
 
   const todayApod = await getTodayApod();
 
@@ -134,6 +138,30 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <div className="glass-panel rounded-xl p-8 md:p-12 neon-border relative overflow-hidden">
             <CoupleForm />
           </div>
+        </div>
+      </section>
+
+      {/* Group Mode Section */}
+      <section className="py-24 px-container-padding relative">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="font-heading text-h2 text-on-surface mb-4">{tGroup("title")}</h2>
+            <p className="font-body text-body-md text-on-surface-variant">{tGroup("subtitle")}</p>
+          </div>
+          <div className="glass-panel rounded-xl p-8 md:p-12 neon-border relative overflow-hidden">
+            <GroupForm />
+          </div>
+        </div>
+      </section>
+
+      {/* Famous Dates Section */}
+      <section className="py-24 px-container-padding relative">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="font-heading text-h2 text-on-surface mb-4">{tFamous("title")}</h2>
+            <p className="font-body text-body-md text-on-surface-variant">{tFamous("subtitle")}</p>
+          </div>
+          <FamousDates />
         </div>
       </section>
 

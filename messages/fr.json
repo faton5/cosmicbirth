@@ -66,5 +66,31 @@
     "title": "L'image du jour",
     "subtitle": "Ce que la NASA publie aujourd'hui",
     "discover": "Voir les détails"
+  },
+  "group": {
+    "title": "Mode Groupe",
+    "subtitle": "Découvrez la compatibilité cosmique de votre groupe",
+    "addDate": "Ajouter une date",
+    "removeLast": "Retirer",
+    "calculate": "Calculer le score du groupe",
+    "minDates": "Ajoutez au moins 3 dates",
+    "score": "Score de groupe",
+    "shareText": "Notre score de groupe CosmicBirth est de {score}% — {label} ! {url}"
+  },
+  "famous": {
+    "title": "Dates cosmiques célèbres",
+    "subtitle": "Compare ta date de naissance avec les grands moments de l'exploration spatiale",
+    "compare": "Comparer avec ma date",
+    "enterYourDate": "Entre ta date de naissance",
+    "events": {
+      "moonLanding": "Premier pas sur la Lune",
+      "hubbleLaunch": "Lancement de Hubble",
+      "issFirstCrew": "Premier équipage ISS",
+      "marsRover": "Curiosity sur Mars",
+      "plutoFlyby": "Survol de Pluton",
+      "blackHolePhoto": "Première photo trou noir",
+      "jamesWebb": "Premier image James Webb",
+      "spacexCrew": "Premier vol habité SpaceX"
+    }
   }
 }
