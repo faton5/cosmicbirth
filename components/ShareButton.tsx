@@ -15,10 +15,11 @@ export function ShareButton({ title, text, url }: ShareButtonProps) {
   const t = useTranslations("result");
 
   async function handleShare() {
+    const fullUrl = url.startsWith("http") ? url : `${window.location.origin}${url}`;
     const shareData = {
       title,
       text: `${text}\n\n#CosmicBirth #NASA #APOD`,
-      url,
+      url: fullUrl,
     };
 
     if (navigator.share) {
