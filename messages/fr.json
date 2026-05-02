@@ -1,0 +1,61 @@
+{
+  "home": {
+    "title": "Découvre ton image cosmique",
+    "subtitle": "Quelle image la NASA a-t-elle publiée le jour de ta naissance ?",
+    "datePlaceholder": "Choisis ta date de naissance",
+    "submit": "Découvrir",
+    "coupleTitle": "Cosmic Match",
+    "coupleSubtitle": "Découvrez votre compatibilité cosmique",
+    "date1Placeholder": "Première date de naissance",
+    "date2Placeholder": "Deuxième date de naissance",
+    "coupleSubmit": "Calculer votre score",
+    "minDate": "La date doit être après le 16 juin 1995",
+    "maxDate": "La date ne peut pas être dans le futur",
+    "invalidDate": "Date invalide"
+  },
+  "result": {
+    "readMore": "Lire la suite",
+    "readLess": "Réduire",
+    "copyright": "Crédit",
+    "viewOnNasa": "Voir sur le site NASA APOD",
+    "share": "Partager",
+    "shareText": "Découvre l'image que la NASA a publiée le {date} ! {title}",
+    "copied": "Lien copié !",
+    "video": "Vidéo",
+    "birthImage": "L'image cosmique du {date}"
+  },
+  "couple": {
+    "title": "Cosmic Match",
+    "score": "Score de compatibilité",
+    "category1": "Image de {name}",
+    "category2": "Image de {name}",
+    "shareText": "Notre score Cosmic Match est de {score}% — {label} ! {url}"
+  },
+  "cosmicLabels": {
+    "parallel": "Univers parallèles",
+    "distant": "Voyageurs distants",
+    "stardust": "Poussière d'étoiles",
+    "crossed": "Orbites croisées",
+    "resonance": "Résonance cosmique",
+    "linked": "Constellation liée",
+    "fusion": "Fusion stellaire",
+    "souls": "Âmes cosmiques"
+  },
+  "leaderboard": {
+    "title": "Dates les plus populaires",
+    "subtitle": "Les 50 dates les plus consultées sur CosmicBirth",
+    "rank": "#",
+    "date": "Date",
+    "image": "Image NASA",
+    "views": "Vues"
+  },
+  "nav": {
+    "home": "Accueil",
+    "leaderboard": "Classement",
+    "switchLang": "English"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "back": "Retour à l'accueil"
+  }
+}

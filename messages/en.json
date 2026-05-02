@@ -1,0 +1,61 @@
+{
+  "home": {
+    "title": "Discover your cosmic image",
+    "subtitle": "What image did NASA publish on the day you were born?",
+    "datePlaceholder": "Choose your birth date",
+    "submit": "Discover",
+    "coupleTitle": "Cosmic Match",
+    "coupleSubtitle": "Discover your cosmic compatibility",
+    "date1Placeholder": "First birth date",
+    "date2Placeholder": "Second birth date",
+    "coupleSubmit": "Calculate your score",
+    "minDate": "Date must be after June 16, 1995",
+    "maxDate": "Date cannot be in the future",
+    "invalidDate": "Invalid date"
+  },
+  "result": {
+    "readMore": "Read more",
+    "readLess": "Show less",
+    "copyright": "Credit",
+    "viewOnNasa": "View on NASA APOD website",
+    "share": "Share",
+    "shareText": "Discover the image NASA published on {date}! {title}",
+    "copied": "Link copied!",
+    "video": "Video",
+    "birthImage": "The cosmic image of {date}"
+  },
+  "couple": {
+    "title": "Cosmic Match",
+    "score": "Compatibility score",
+    "category1": "{name}'s image",
+    "category2": "{name}'s image",
+    "shareText": "Our Cosmic Match score is {score}% — {label}! {url}"
+  },
+  "cosmicLabels": {
+    "parallel": "Parallel Universes",
+    "distant": "Distant Travelers",
+    "stardust": "Stardust",
+    "crossed": "Crossed Orbits",
+    "resonance": "Cosmic Resonance",
+    "linked": "Linked Constellation",
+    "fusion": "Stellar Fusion",
+    "souls": "Cosmic Souls"
+  },
+  "leaderboard": {
+    "title": "Most popular dates",
+    "subtitle": "The 50 most viewed dates on CosmicBirth",
+    "rank": "#",
+    "date": "Date",
+    "image": "NASA image",
+    "views": "Views"
+  },
+  "nav": {
+    "home": "Home",
+    "leaderboard": "Leaderboard",
+    "switchLang": "Français"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "back": "Back to home"
+  }
+}
