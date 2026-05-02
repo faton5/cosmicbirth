@@ -12,7 +12,8 @@
     "coupleSubmit": "Calculer votre score",
     "minDate": "La date doit être après le 16 juin 1995",
     "maxDate": "La date ne peut pas être dans le futur",
-    "invalidDate": "Date invalide",\n    "recentDates": "Vos dernières recherches"
+    "invalidDate": "Date invalide",
+    "recentDates": "Vos dernières recherches"
   },
   "result": {
     "readMore": "Lire la suite",

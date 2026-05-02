@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { DatePicker } from "@/components/DatePicker";
 import { CoupleForm } from "@/components/CoupleForm";
 import { SurpriseButton } from "@/components/SurpriseButton";
+import { RecentDates } from "@/components/RecentDates";
 import { supabase } from "@/lib/supabase";
 import { fetchApodFromNasa } from "@/lib/nasa";
 import Image from "next/image";
@@ -80,6 +81,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <div className="mt-6">
             <SurpriseButton />
           </div>
+        </div>
+      </section>
+
+      {/* Recent Dates */}
+      <section className="px-container-padding">
+        <div className="max-w-4xl mx-auto">
+          <RecentDates />
         </div>
       </section>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { ExternalLink } from "lucide-react";
@@ -7,6 +8,7 @@ import { ReadMore } from "@/components/ReadMore";
 import { VideoEmbed } from "@/components/VideoEmbed";
 import { ShareButton } from "@/components/ShareButton";
 import { DownloadCard } from "@/components/DownloadCard";
+import { addRecentDate } from "@/lib/use-recent-dates";
 import type { ApodCache } from "@/lib/supabase";
 
 type ApodCardProps = {
@@ -22,6 +24,10 @@ export function ApodCard({ apod, locale, formattedDate }: ApodCardProps) {
     typeof window !== "undefined"
       ? window.location.href
       : `/${locale}/result/${apod.date}`;
+
+  useEffect(() => {
+    addRecentDate(apod.date);
+  }, [apod.date]);
 
   return (
     <article className="glass-panel rounded-xl overflow-hidden neon-border w-full max-w-4xl">
