@@ -75,7 +75,7 @@ export function DownloadCard({ apod, formattedDate }: DownloadCardProps) {
         {apod.media_type === "image" && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={apod.url}
+            src={`/api/image-proxy?url=${encodeURIComponent(apod.url)}`}
             alt=""
             crossOrigin="anonymous"
             style={{
