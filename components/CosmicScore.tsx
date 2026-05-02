@@ -14,13 +14,17 @@ export function CosmicScore({ score, labelKey }: CosmicScoreProps) {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <p className="text-sm uppercase tracking-widest text-muted-foreground">
+      <p className="text-label-caps uppercase text-on-surface-variant font-heading">
         {tCouple("score")}
       </p>
 
-      {/* Circular progress */}
-      <div className="relative h-40 w-40">
-        <svg className="h-full w-full -rotate-90" viewBox="0 0 120 120">
+      {/* Circular progress with glow */}
+      <div className="relative flex items-center justify-center w-64 h-64 sm:w-80 sm:h-80 mb-8">
+        {/* Blurred glow behind */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 blur-2xl" />
+
+        {/* SVG Circle */}
+        <svg className="relative h-full w-full -rotate-90 drop-shadow-[0_0_20px_rgba(208,188,255,0.6)]" viewBox="0 0 120 120">
           <circle
             cx="60"
             cy="60"
@@ -28,7 +32,7 @@ export function CosmicScore({ score, labelKey }: CosmicScoreProps) {
             fill="none"
             stroke="currentColor"
             strokeWidth="8"
-            className="text-secondary"
+            className="text-surface-variant opacity-30"
           />
           <circle
             cx="60"
@@ -43,12 +47,16 @@ export function CosmicScore({ score, labelKey }: CosmicScoreProps) {
             className="text-primary"
           />
         </svg>
+
+        {/* Score text with gradient */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-4xl font-bold">{score}%</span>
+          <span className="text-6xl sm:text-7xl font-heading font-bold bg-gradient-to-br from-white to-primary-fixed bg-clip-text text-transparent">
+            {score}%
+          </span>
         </div>
       </div>
 
-      <p className="text-xl font-semibold text-primary">{t(labelKey)}</p>
+      <p className="text-h3 font-heading text-gradient">{t(labelKey)}</p>
     </div>
   );
 }

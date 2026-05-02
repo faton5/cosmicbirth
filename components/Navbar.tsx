@@ -15,14 +15,12 @@ export function Navbar() {
   const isLeaderboard = pathname.includes("/leaderboard");
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-zinc-950/70 backdrop-blur-[20px] border-b border-white/10 shadow-[0_0_30px_rgba(139,92,246,0.15)] flex justify-between items-center px-8 h-20 max-w-full">
-      <div className="flex items-center gap-4">
-        <Link href={`/${locale}`} className="flex items-center gap-2 hover:bg-white/5 transition-all duration-300 p-2 rounded-lg">
-          <span className="text-2xl font-black tracking-tighter text-white font-heading bg-clip-text bg-gradient-to-r from-violet-500 to-fuchsia-400">
-            CosmicBirth
-          </span>
-        </Link>
-      </div>
+    <header className="fixed top-0 w-full z-50 bg-zinc-950/70 backdrop-blur-[20px] border-b border-white/10 shadow-[0_0_30px_rgba(139,92,246,0.15)] flex justify-between items-center px-8 h-20">
+      <Link href={`/${locale}`} className="flex items-center gap-2 hover:bg-white/5 transition-all duration-300 p-2 rounded-lg">
+        <span className="text-2xl font-black tracking-tighter font-heading bg-gradient-to-r from-violet-500 to-fuchsia-400 bg-clip-text text-transparent">
+          CosmicBirth
+        </span>
+      </Link>
       <nav className="hidden md:flex gap-6 items-center font-heading uppercase tracking-widest text-sm">
         <Link
           href={`/${locale}`}
@@ -36,10 +34,10 @@ export function Navbar() {
         </Link>
         <Link
           href={`/${locale}/leaderboard`}
-          className={`px-4 py-2 rounded-full transition-all duration-300 ${
+          className={`px-4 py-2 transition-all duration-300 ${
             isLeaderboard
               ? "text-violet-400 font-bold border-b-2 border-violet-500 pb-1"
-              : "text-zinc-400 font-medium hover:text-white hover:bg-white/5"
+              : "text-zinc-400 font-medium hover:text-white hover:bg-white/5 rounded-full"
           }`}
         >
           {t("leaderboard")}
