@@ -5,6 +5,7 @@ import { isValidApodDate } from "@/lib/validators";
 import { supabase } from "@/lib/supabase";
 import { fetchApodFromNasa } from "@/lib/nasa";
 import { ApodCard } from "@/components/ApodCard";
+import { FadeIn } from "@/components/FadeIn";
 import type { Metadata } from "next";
 
 type Props = {
@@ -77,7 +78,9 @@ export default async function ResultPage({ params }: Props) {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4">
-      <ApodCard apod={apod} locale={locale} formattedDate={formattedDate} />
+      <FadeIn>
+        <ApodCard apod={apod} locale={locale} formattedDate={formattedDate} />
+      </FadeIn>
     </main>
   );
 }
