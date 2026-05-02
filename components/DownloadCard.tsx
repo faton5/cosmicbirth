@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useState } from "react";
-import { toPng } from "html-to-image";
+import { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { ApodCache } from "@/lib/supabase";
 
@@ -10,167 +9,145 @@ type DownloadCardProps = {
   formattedDate: string;
 };
 
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
 export function DownloadCard({ apod, formattedDate }: DownloadCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
   const [generating, setGenerating] = useState(false);
   const t = useTranslations("result");
 
   const handleDownload = useCallback(async () => {
-    if (!cardRef.current) return;
+    if (apod.media_type === "video") return;
     setGenerating(true);
 
     try {
-      // Make the hidden card visible briefly for capture
-      cardRef.current.style.display = "flex";
+      const W = 1080;
+      const H = 1920;
+      const canvas = document.createElement("canvas");
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext("2d")!;
 
-      const dataUrl = await toPng(cardRef.current, {
-        width: 1080,
-        height: 1920,
-        pixelRatio: 1,
-        cacheBust: true,
-      });
+      // Background
+      ctx.fillStyle = "#0e0e14";
+      ctx.fillRect(0, 0, W, H);
 
-      cardRef.current.style.display = "none";
+      // Load and draw APOD image via proxy
+      try {
+        const img = await loadImage(`/api/image-proxy?url=${encodeURIComponent(apod.url)}`);
+        const scale = Math.max(W / img.width, H / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        ctx.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
+      } catch {
+        // Image failed to load — continue with dark background
+      }
 
-      const link = document.createElement("a");
-      link.download = `cosmicbirth-${apod.date}.png`;
-      link.href = dataUrl;
-      link.click();
+      // Gradient overlay
+      const grad = ctx.createLinearGradient(0, H * 0.3, 0, H);
+      grad.addColorStop(0, "rgba(14,14,20,0)");
+      grad.addColorStop(0.5, "rgba(14,14,20,0.7)");
+      grad.addColorStop(0.8, "rgba(14,14,20,0.95)");
+      grad.addColorStop(1, "rgba(14,14,20,1)");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Date chip
+      const chipY = H - 420;
+      ctx.font = "bold 16px 'Space Grotesk', sans-serif";
+      ctx.letterSpacing = "2px";
+      const dateText = formattedDate.toUpperCase();
+      const dateW = ctx.measureText(dateText).width;
+      const chipPadX = 24;
+      const chipPadY = 12;
+      const chipW = dateW + chipPadX * 2;
+      const chipH = 16 + chipPadY * 2;
+
+      ctx.fillStyle = "rgba(208, 188, 255, 0.2)";
+      ctx.beginPath();
+      ctx.roundRect(60, chipY, chipW, chipH, chipH / 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(208, 188, 255, 0.3)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(60, chipY, chipW, chipH, chipH / 2);
+      ctx.stroke();
+
+      ctx.fillStyle = "#d0bcff";
+      ctx.fillText(dateText, 60 + chipPadX, chipY + chipPadY + 14);
+
+      // Title
+      ctx.letterSpacing = "0px";
+      ctx.font = "bold 52px 'Space Grotesk', sans-serif";
+      ctx.fillStyle = "#e4e1ea";
+      const titleY = chipY + chipH + 40;
+      const maxTitleWidth = W - 120;
+
+      // Word wrap title
+      const words = apod.title.split(" ");
+      let line = "";
+      let y = titleY;
+      const lineHeight = 60;
+
+      for (const word of words) {
+        const testLine = line ? `${line} ${word}` : word;
+        if (ctx.measureText(testLine).width > maxTitleWidth && line) {
+          ctx.fillText(line, 60, y);
+          line = word;
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, 60, y);
+
+      // Branding
+      const brandY = y + 60;
+
+      // CosmicBirth gradient text
+      ctx.font = "900 28px 'Space Grotesk', sans-serif";
+      const brandGrad = ctx.createLinearGradient(60, 0, 280, 0);
+      brandGrad.addColorStop(0, "#8b5cf6");
+      brandGrad.addColorStop(1, "#d946ef");
+      ctx.fillStyle = brandGrad;
+      ctx.fillText("CosmicBirth", 60, brandY);
+
+      const cbWidth = ctx.measureText("CosmicBirth").width;
+      ctx.fillStyle = "#958ea0";
+      ctx.font = "400 16px 'Inter', sans-serif";
+      ctx.fillText("  ·  NASA APOD", 60 + cbWidth, brandY);
+
+      // Download
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.download = `cosmicbirth-${apod.date}.png`;
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+      }, "image/png");
     } catch (err) {
       console.error("Failed to generate card:", err);
     } finally {
       setGenerating(false);
     }
-  }, [apod.date]);
+  }, [apod, formattedDate]);
 
   return (
-    <>
-      {/* Download button */}
-      <button
-        onClick={handleDownload}
-        disabled={generating || apod.media_type === "video"}
-        className="inline-flex items-center gap-2 rounded-full border border-outline-variant px-6 py-3 text-label-caps uppercase font-heading text-on-surface-variant hover:text-white hover:bg-white/5 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-      >
-        {generating ? "..." : t("downloadCard")}
-      </button>
-
-      {/* Hidden card template for PNG generation (1080x1920 = 9:16 story format) */}
-      <div
-        ref={cardRef}
-        style={{
-          display: "none",
-          position: "fixed",
-          left: "-9999px",
-          top: 0,
-          width: "1080px",
-          height: "1920px",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          backgroundColor: "#0e0e14",
-          fontFamily: "'Space Grotesk', sans-serif",
-          overflow: "hidden",
-        }}
-      >
-        {/* Background image */}
-        {apod.media_type === "image" && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={`/api/image-proxy?url=${encodeURIComponent(apod.url)}`}
-            alt=""
-            crossOrigin="anonymous"
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        )}
-
-        {/* Gradient overlay */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "linear-gradient(to bottom, rgba(14,14,20,0) 30%, rgba(14,14,20,0.7) 60%, rgba(14,14,20,0.95) 80%)",
-          }}
-        />
-
-        {/* Content */}
-        <div
-          style={{
-            position: "relative",
-            padding: "80px 60px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "24px",
-          }}
-        >
-          {/* Date chip */}
-          <div
-            style={{
-              display: "inline-flex",
-              alignSelf: "flex-start",
-              padding: "12px 24px",
-              borderRadius: "9999px",
-              background: "rgba(208, 188, 255, 0.2)",
-              border: "1px solid rgba(208, 188, 255, 0.3)",
-            }}
-          >
-            <span
-              style={{
-                fontSize: "16px",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: "#d0bcff",
-              }}
-            >
-              {formattedDate}
-            </span>
-          </div>
-
-          {/* Title */}
-          <h2
-            style={{
-              fontSize: "52px",
-              fontWeight: 700,
-              lineHeight: 1.1,
-              color: "#e4e1ea",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            {apod.title}
-          </h2>
-
-          {/* Branding */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              marginTop: "20px",
-            }}
-          >
-            <span
-              style={{
-                fontSize: "28px",
-                fontWeight: 900,
-                letterSpacing: "-0.04em",
-                background: "linear-gradient(to right, #8b5cf6, #d946ef)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              CosmicBirth
-            </span>
-            <span style={{ color: "#958ea0", fontSize: "16px" }}>·</span>
-            <span style={{ color: "#958ea0", fontSize: "16px" }}>NASA APOD</span>
-          </div>
-        </div>
-      </div>
-    </>
+    <button
+      onClick={handleDownload}
+      disabled={generating || apod.media_type === "video"}
+      className="inline-flex items-center gap-2 rounded-full border border-outline-variant px-6 py-3 text-label-caps uppercase font-heading text-on-surface-variant hover:text-white hover:bg-white/5 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+    >
+      {generating ? "..." : t("downloadCard")}
+    </button>
   );
 }
