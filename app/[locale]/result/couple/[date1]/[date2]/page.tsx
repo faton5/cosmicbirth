@@ -7,7 +7,8 @@ import { isValidApodDate } from "@/lib/validators";
 import { supabase } from "@/lib/supabase";
 import { fetchApodFromNasa } from "@/lib/nasa";
 import { calculateCosmicScore } from "@/lib/cosmic-score";
-import { CosmicScore } from "@/components/CosmicScore";
+import { AnimatedScore } from "@/components/AnimatedScore";
+import { FadeIn } from "@/components/FadeIn";
 import { ShareButton } from "@/components/ShareButton";
 import { VideoEmbed } from "@/components/VideoEmbed";
 import type { Metadata } from "next";
@@ -97,11 +98,16 @@ export default async function CouplePage({ params }: Props) {
 
       {/* Cosmic Score centered */}
       <div className="flex justify-center">
-        <CosmicScore score={result.score} labelKey={result.labelKey} />
+        <AnimatedScore
+          score={result.score}
+          labelText={label}
+          scoreLabel={t("score")}
+        />
       </div>
 
       {/* Two image cards in Stitch couple design */}
-      <div className="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
+      <FadeIn delay={800} className="w-full">
+        <div className="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
         {/* Card 1 */}
         <div className="relative rounded-xl overflow-hidden bg-surface-container/50 backdrop-blur-[20px] neon-border group aspect-square sm:aspect-video md:aspect-square lg:aspect-video flex flex-col justify-end">
           {apod1.media_type === "video" ? (
@@ -157,18 +163,21 @@ export default async function CouplePage({ params }: Props) {
             </>
           )}
         </div>
-      </div>
+        </div>
+      </FadeIn>
 
       {/* Share button with gradient */}
-      <ShareButton
-        title="Cosmic Match"
-        text={t("shareText", {
-          score: result.score,
-          label,
-          url: pageUrl,
-        })}
-        url={pageUrl}
-      />
+      <FadeIn delay={1200}>
+        <ShareButton
+          title="Cosmic Match"
+          text={t("shareText", {
+            score: result.score,
+            label,
+            url: pageUrl,
+          })}
+          url={pageUrl}
+        />
+      </FadeIn>
     </main>
   );
 }
