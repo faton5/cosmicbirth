@@ -22,7 +22,8 @@
     "shareText": "Discover the image NASA published on {date}! {title}",
     "copied": "Link copied!",
     "video": "Video",
-    "birthImage": "The cosmic image of {date}"
+    "birthImage": "The cosmic image of {date}",
+    "downloadCard": "Download my card"
   },
   "couple": {
     "title": "Cosmic Match",
@@ -57,5 +58,10 @@
   "notFound": {
     "title": "Page not found",
     "back": "Back to home"
+  },
+  "today": {
+    "title": "Today's image",
+    "subtitle": "What NASA is publishing today",
+    "discover": "View details"
   }
 }

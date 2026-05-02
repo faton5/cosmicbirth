@@ -6,6 +6,7 @@ import { ExternalLink } from "lucide-react";
 import { ReadMore } from "@/components/ReadMore";
 import { VideoEmbed } from "@/components/VideoEmbed";
 import { ShareButton } from "@/components/ShareButton";
+import { DownloadCard } from "@/components/DownloadCard";
 import type { ApodCache } from "@/lib/supabase";
 
 type ApodCardProps = {
@@ -75,6 +76,7 @@ export function ApodCard({ apod, locale, formattedDate }: ApodCardProps) {
             text={t("shareText", { date: formattedDate, title: apod.title })}
             url={resultUrl}
           />
+          <DownloadCard apod={apod} formattedDate={formattedDate} />
           <a
             href={apodArchiveUrl}
             target="_blank"
