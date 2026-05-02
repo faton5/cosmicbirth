@@ -10,6 +10,7 @@ import { calculateCosmicScore } from "@/lib/cosmic-score";
 import { AnimatedScore } from "@/components/AnimatedScore";
 import { FadeIn } from "@/components/FadeIn";
 import { ShareButton } from "@/components/ShareButton";
+import { DownloadCoupleCard } from "@/components/DownloadCoupleCard";
 import { VideoEmbed } from "@/components/VideoEmbed";
 import type { Metadata } from "next";
 
@@ -166,17 +167,31 @@ export default async function CouplePage({ params }: Props) {
         </div>
       </FadeIn>
 
-      {/* Share button with gradient */}
+      {/* Share and Download buttons */}
       <FadeIn delay={1200}>
-        <ShareButton
-          title="Cosmic Match"
-          text={t("shareText", {
-            score: result.score,
-            label,
-            url: pageUrl,
-          })}
-          url={pageUrl}
-        />
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <ShareButton
+            title="Cosmic Match"
+            text={t("shareText", {
+              score: result.score,
+              label,
+              url: pageUrl,
+            })}
+            url={pageUrl}
+          />
+          <DownloadCoupleCard
+            imageUrl1={apod1.url}
+            imageUrl2={apod2.url}
+            title1={apod1.title}
+            title2={apod2.title}
+            date1={date1}
+            date2={date2}
+            score={result.score}
+            labelText={label}
+            mediaType1={apod1.media_type}
+            mediaType2={apod2.media_type}
+          />
+        </div>
       </FadeIn>
     </main>
   );
