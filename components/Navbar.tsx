@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
-import { Globe } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const locale = useLocale();
@@ -14,28 +12,45 @@ export function Navbar() {
   const otherLocale = locale === "fr" ? "en" : "fr";
   const switchedPath = pathname.replace(`/${locale}`, `/${otherLocale}`);
 
-  return (
-    <nav className="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <div className="flex items-center gap-6">
-          <Link href={`/${locale}`} className="text-lg font-bold">
-            CosmicBirth
-          </Link>
-          <Link
-            href={`/${locale}/leaderboard`}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            {t("leaderboard")}
-          </Link>
-        </div>
+  const isLeaderboard = pathname.includes("/leaderboard");
 
-        <Link href={switchedPath}>
-          <Button variant="ghost" size="sm">
-            <Globe className="mr-2 h-4 w-4" />
-            {t("switchLang")}
-          </Button>
+  return (
+    <header className="fixed top-0 w-full z-50 bg-zinc-950/70 backdrop-blur-[20px] border-b border-white/10 shadow-[0_0_30px_rgba(139,92,246,0.15)] flex justify-between items-center px-8 h-20 max-w-full">
+      <div className="flex items-center gap-4">
+        <Link href={`/${locale}`} className="flex items-center gap-2 hover:bg-white/5 transition-all duration-300 p-2 rounded-lg">
+          <span className="text-2xl font-black tracking-tighter text-white font-heading bg-clip-text bg-gradient-to-r from-violet-500 to-fuchsia-400">
+            CosmicBirth
+          </span>
         </Link>
       </div>
-    </nav>
+      <nav className="hidden md:flex gap-6 items-center font-heading uppercase tracking-widest text-sm">
+        <Link
+          href={`/${locale}`}
+          className={`px-4 py-2 rounded-full transition-all duration-300 ${
+            !isLeaderboard
+              ? "text-violet-400 font-bold"
+              : "text-zinc-400 font-medium hover:text-white hover:bg-white/5"
+          }`}
+        >
+          {t("home")}
+        </Link>
+        <Link
+          href={`/${locale}/leaderboard`}
+          className={`px-4 py-2 rounded-full transition-all duration-300 ${
+            isLeaderboard
+              ? "text-violet-400 font-bold border-b-2 border-violet-500 pb-1"
+              : "text-zinc-400 font-medium hover:text-white hover:bg-white/5"
+          }`}
+        >
+          {t("leaderboard")}
+        </Link>
+      </nav>
+      <Link
+        href={switchedPath}
+        className="font-heading uppercase tracking-widest text-sm text-violet-500 hover:text-violet-400 transition-colors font-bold hover:bg-white/5 px-4 py-2 rounded-lg border border-white/10"
+      >
+        {t("switchLang")}
+      </Link>
+    </header>
   );
 }
