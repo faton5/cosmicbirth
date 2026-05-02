@@ -3,69 +3,108 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { format } from "date-fns";
-import { fr, enUS } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-
-const APOD_START = new Date("1995-06-16");
-
-function getYesterday(): Date {
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
 
 export function DatePicker() {
-  const [date, setDate] = useState<Date>();
-  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations("home");
-  const dateLocale = locale === "fr" ? fr : enUS;
 
-  function handleSelect(selected: Date | undefined) {
-    if (!selected) return;
-    setDate(selected);
-    setOpen(false);
+  function parseAndValidate(input: string): string | null {
+    const parts = input.split("/");
+    if (parts.length !== 3) return null;
 
-    const formatted = format(selected, "yyyy-MM-dd");
-    router.push(`/${locale}/result/${formatted}`);
+    const [day, month, year] = parts;
+    if (!day || !month || !year || year.length !== 4) return null;
+
+    const d = parseInt(day, 10);
+    const m = parseInt(month, 10);
+    const y = parseInt(year, 10);
+
+    if (isNaN(d) || isNaN(m) || isNaN(y)) return null;
+
+    const date = new Date(Date.UTC(y, m - 1, d));
+    if (
+      date.getUTCFullYear() !== y ||
+      date.getUTCMonth() !== m - 1 ||
+      date.getUTCDate() !== d
+    )
+      return null;
+
+    const min = new Date("1995-06-16T00:00:00Z");
+    const yesterday = new Date();
+    yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+    yesterday.setUTCHours(0, 0, 0, 0);
+
+    if (date < min) return "min";
+    if (date > yesterday) return "max";
+
+    const iso = `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    return iso;
+  }
+
+  function handleSubmit() {
+    const result = parseAndValidate(value);
+    if (!result) {
+      setError(t("invalidDate"));
+      return;
+    }
+    if (result === "min") {
+      setError(t("minDate"));
+      return;
+    }
+    if (result === "max") {
+      setError(t("maxDate"));
+      return;
+    }
+    setError("");
+    router.push(`/${locale}/result/${result}`);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter") handleSubmit();
+  }
+
+  function formatInput(raw: string): string {
+    const digits = raw.replace(/\D/g, "");
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`;
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const formatted = formatInput(e.target.value);
+    setValue(formatted);
+    if (error) setError("");
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger
-        className={cn(
-          "w-72 justify-start text-left font-normal inline-flex shrink-0 items-center rounded-lg border border-border bg-background text-sm font-medium transition-all outline-none select-none hover:bg-muted hover:text-foreground px-2.5 h-8 gap-1.5",
-          !date && "text-muted-foreground"
-        )}
-      >
-        <CalendarIcon className="mr-2 h-4 w-4" />
-        {date
-          ? format(date, "PPP", { locale: dateLocale })
-          : t("datePlaceholder")}
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="center">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={handleSelect}
-          disabled={(d) => d < APOD_START || d > getYesterday()}
-          defaultMonth={date || new Date(2000, 0)}
-          fromDate={APOD_START}
-          toDate={getYesterday()}
-          locale={dateLocale}
-          captionLayout="dropdown"
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex flex-col gap-2 text-left">
+        <label className="text-label-caps text-on-surface-variant uppercase font-heading">
+          {t("datePlaceholder")}
+        </label>
+        <input
+          type="text"
+          inputMode="numeric"
+          placeholder="15/06/2007"
+          value={value}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          maxLength={10}
+          className="w-full bg-surface-container/50 border border-outline-variant rounded-lg py-4 px-4 text-on-surface font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none placeholder:text-on-surface-variant/50"
         />
-      </PopoverContent>
-    </Popover>
+      </div>
+      {error && (
+        <p className="text-sm text-red-400">{error}</p>
+      )}
+      <button
+        onClick={handleSubmit}
+        className="w-full bg-gradient-to-r from-primary to-secondary text-on-primary-container font-heading text-body-lg font-bold py-4 rounded-full shadow-[0_0_20px_rgba(208,188,255,0.4)] hover:shadow-[0_0_30px_rgba(208,188,255,0.6)] transition-all duration-300 transform hover:-translate-y-1"
+      >
+        {t("submit")}
+      </button>
+    </div>
   );
 }
