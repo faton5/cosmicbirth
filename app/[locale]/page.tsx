@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { DatePicker } from "@/components/DatePicker";
 import { CoupleForm } from "@/components/CoupleForm";
+import { SurpriseButton } from "@/components/SurpriseButton";
 import { supabase } from "@/lib/supabase";
 import { fetchApodFromNasa } from "@/lib/nasa";
 import Image from "next/image";
@@ -74,6 +75,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <div className="flex flex-col gap-6">
               <DatePicker />
             </div>
+          </div>
+
+          <div className="mt-6">
+            <SurpriseButton />
           </div>
         </div>
       </section>

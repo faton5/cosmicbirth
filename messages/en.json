@@ -4,6 +4,7 @@
     "subtitle": "What image did NASA publish on the day you were born?",
     "datePlaceholder": "Choose your birth date",
     "submit": "Discover",
+    "surprise": "Surprise me ✨",
     "coupleTitle": "Cosmic Match",
     "coupleSubtitle": "Discover your cosmic compatibility",
     "date1Placeholder": "First birth date",
@@ -11,7 +12,8 @@
     "coupleSubmit": "Calculate your score",
     "minDate": "Date must be after June 16, 1995",
     "maxDate": "Date cannot be in the future",
-    "invalidDate": "Invalid date"
+    "invalidDate": "Invalid date",
+    "recentDates": "Your recent searches"
   },
   "result": {
     "readMore": "Read more",
@@ -30,7 +32,8 @@
     "score": "Compatibility score",
     "category1": "{name}'s image",
     "category2": "{name}'s image",
-    "shareText": "Our Cosmic Match score is {score}% — {label}! {url}"
+    "shareText": "Our Cosmic Match score is {score}% — {label}! {url}",
+    "downloadCard": "Download our card"
   },
   "cosmicLabels": {
     "parallel": "Parallel Universes",
